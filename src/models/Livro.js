@@ -2,17 +2,17 @@ import mongoose from "mongoose";
 
 const livroSchema = new mongoose.Schema(
   {
-    id: {type: String},
+    id: { type: String },
     titulo: {
-      type: String, 
+      type: String,
       required: [true, "O título do livro é obrigatório!"]
     },
     autor: {
-      type: mongoose.Schema.Types.ObjectId, 
+      type: mongoose.Schema.Types.ObjectId,
       ref: "autores", required: [true, "O autor(a) é obrigatório!"]
     },
     editora: {
-      type: String, 
+      type: String,
       required: [true, "A Editora é obrigatória!"],
       enum: {
         values: ["Casa do código", "Alura"],
@@ -21,12 +21,16 @@ const livroSchema = new mongoose.Schema(
     },
     numeroPaginas: {
       type: Number,
-      min: [10, "O núemro de página deve estar enter 10 e 2000. Valor fornecido {VALUE}"],
-      max: [2000, "O núemro de página deve estar enter 10 e 2000. Valor fornecido {VALUE}"]
+      validate: {
+        validator: (valor) => {
+          return valor >= 10 && valor <= 2000;
+        },
+        message: "O número de páginas deve estar entre 10 e 2000. Valor fornecido {VALUE}"
+      }
     }
   }
 );
 
-const livros= mongoose.model("livros", livroSchema);
+const livros = mongoose.model("livros", livroSchema);
 
 export default livros;
